@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
- * Version: 0.14.8 - 2016-02-18T22:01:43.792Z
+ * Version: 0.14.9 - 2016-02-26T10:03:29.359Z
  * License: MIT
  */
 
@@ -482,7 +482,11 @@ uis.controller('uiSelectCtrl',
         ctrl.setItemsFn(data);
       }else{
         if ( data !== undefined ) {
-          var filteredItems = data.filter(function(i) {return selectedItems && selectedItems.indexOf(i) < 0;});
+          var filteredItems = data.filter(function(i) {
+            var filter = true;
+            selectedItems.forEach(function(k){filter = filter && !angular.equals(k,i);});
+            return filter;
+          });
           ctrl.setItemsFn(filteredItems);
         }
       }

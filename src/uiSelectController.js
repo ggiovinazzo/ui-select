@@ -223,7 +223,11 @@ uis.controller('uiSelectCtrl',
         ctrl.setItemsFn(data);
       }else{
         if ( data !== undefined ) {
-          var filteredItems = data.filter(function(i) {return selectedItems && selectedItems.indexOf(i) < 0;});
+          var filteredItems = data.filter(function(i) {
+            var filter = true;
+            selectedItems.forEach(function(k){filter = filter && !angular.equals(k,i);});
+            return filter;
+          });
           ctrl.setItemsFn(filteredItems);
         }
       }
