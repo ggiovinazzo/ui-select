@@ -223,11 +223,19 @@ uis.controller('uiSelectCtrl',
         ctrl.setItemsFn(data);
       }else{
         if ( data !== undefined ) {
-          var filteredItems = data.filter(function(i) {
-            var filter = true;
-            selectedItems.forEach(function(k){filter = filter && !angular.equals(k,i);});
-            return filter;
-          });
+          var filteredItems = [];
+          if (!angular.isUndefined(ctrl.onFilterAsyncCallback)) {
+            filteredItems = $parse(ctrl.onFilterAsyncCallback)($scope)(selectedItems, data);
+          }
+          else {
+            filteredItems = data.filter(function (i) {
+              var filter = true;
+              selectedItems.forEach(function (k) {
+                filter = filter && !angular.equals(k, i);
+              });
+              return filter;
+            });
+          }
           ctrl.setItemsFn(filteredItems);
         }
       }
