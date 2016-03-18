@@ -128,6 +128,7 @@ describe('ui-select tests', function() {
       if (attrs.appendToBody !== undefined) { attrsHtml += ' append-to-body="' + attrs.appendToBody + '"'; }
       if (attrs.allowClear !== undefined) { matchAttrsHtml += ' allow-clear="' + attrs.allowClear + '"';}
       if (attrs.inputId !== undefined) { attrsHtml += ' input-id="' + attrs.inputId + '"'; }
+      if (attrs.ngClass !== undefined) { attrsHtml += ' ng-class="' + attrs.ngClass + '"'; }
     }
 
     return compileTemplate(
@@ -260,6 +261,32 @@ describe('ui-select tests', function() {
 
   });
 
+  it('should parse simple property binding repeat syntax with a basic filter', function () {
+
+    var locals = {};
+    locals.people = [{ name: 'Wladimir' }, { name: 'Samantha' }];
+    locals.person = locals.people[1];
+
+    var parserResult = uisRepeatParser.parse('person.name as person in people | filter: { name: \'Samantha\' }');
+    expect(parserResult.itemName).toBe('person');
+    expect(parserResult.modelMapper(locals)).toBe(locals.person.name);
+    expect(parserResult.source(locals)).toEqual([locals.person]);
+
+  });
+
+  it('should parse simple property binding repeat syntax with track by', function () {
+
+    var locals = {};
+    locals.people = [{ name: 'Wladimir' }, { name: 'Samantha' }];
+    locals.person = locals.people[0];
+
+    var parserResult = uisRepeatParser.parse('person.name as person in people track by person.name');
+    expect(parserResult.itemName).toBe('person');
+    expect(parserResult.modelMapper(locals)).toBe(locals.person.name);
+    expect(parserResult.source(locals)).toBe(locals.people);
+
+  });
+
   it('should parse (key, value) repeat syntax', function() {
 
     var locals = {};
@@ -347,6 +374,14 @@ describe('ui-select tests', function() {
     var el = createUiSelect();
 
     expect(getMatchLabel(el)).toEqual('Adam');
+  });
+
+  it('should merge both ng-class attributes defined on ui-select and its templates', function() {
+    var el = createUiSelect({
+      ngClass: "{class: expression}"
+    });
+
+    expect($(el).attr('ng-class')).toEqual("{class: expression, open: $select.open}");
   });
 
   it('should correctly render initial state with track by feature', function() {
@@ -2193,6 +2228,18 @@ describe('ui-select tests', function() {
       var searchEl = $(el).find('input.ui-select-search');
       expect(searchEl.length).toEqual(1);
       expect(searchEl[0].id).toEqual('inid');
+    });
+
+    it('should properly identify as empty if required', function () {
+      var el = createUiSelectMultiple({required: true});
+      expect(el.hasClass('ng-empty')).toBeTruthy();
+    });
+
+    it('should properly identify as not empty if required', function () {
+      var el = createUiSelectMultiple({required: true});
+      clickItem(el, 'Nicole');
+      clickItem(el, 'Samantha');
+      expect(el.hasClass('ng-not-empty')).toBeTruthy();
     });
   });
 

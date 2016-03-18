@@ -17,26 +17,28 @@ We have very precise rules over how our git commit messages can be formatted for
 readable messages** that are easy to follow when looking through the **project history**.  But also,
 we use the git commit messages to **generate the change log**.
 
+## Development
+
+### Prepare your environment
+* Install [Node.js](http://nodejs.org/) and NPM (should come with)
+* Install global dev dependencies: `npm install -g bower gulp`
+* Install local dev dependencies: `npm install && bower install` in repository directory
+
+### Development Commands
+
+* `gulp` to jshint, build and test
+* `gulp build` to jshint and build
+* `gulp test` for one-time test with karma (also build and jshint)
+* `gulp watch` to watch src files to jshint, build and test when changed
 
 ## Recommended workflow
 
 1. Make changes
-2. Run `gulp` or `gulp test` to run Karma tests.
-3. If tests pass, commit those changes using the conventions below.
-4. Run `gulp bump` to update the version in package.json, add a git tag and generate the updated CHANGELOG.md.
-5. `conventionalChangelog` (see https://github.com/ajoslin/conventional-changelog)
-6. Commit updated `package.json` and `CHANGELOG.md` files
-7. Push
-8. Create PR
-
-The reason why you should commit and tag after `conventionalChangelog` is that the CHANGELOG should be included in the new release, hence `gitRawCommitsOpts.from` defaults to the latest semver tag.
-
-This process is automated with gulp, including determining the type of version to bump (major, minor or patch). To use Gulp, follow these steps:
-
-1. Complete a feature or bug
-2. Commit the changes
-3. Run `gulp bump` (this will bump the version in package.json, run conventional-changelog to update the changelog and tag the version.
-4. Push
+2. Run `gulp` or `gulp test` to run Karma tests and ensure they pass.
+3. Reset all `dist/*` files
+4. Commit changes using the commit message conventions below.
+5. Push
+6. Create PR
 
 ### Commit Message Format
 Each commit message consists of a **header**, a **body** and a **footer**.  The header has a special
