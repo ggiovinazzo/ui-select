@@ -22,7 +22,8 @@
     "examples"
   ],
   "dependencies": {
-    "angular": ">=1.2.18"
+    "angular": ">=1.2.18",
+    "angular-bindonce": "^0.3.3"
   },
   "devDependencies": {
     "jquery": "~1.11",
