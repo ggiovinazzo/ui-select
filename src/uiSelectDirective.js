@@ -3,24 +3,24 @@ uis.directive('uiSelect',
     function ($document, uiSelectConfig, uiSelectMinErr, uisOffset, $compile, $parse, $timeout) {
 
       return {
-        restrict   : 'EA',
+        restrict: 'EA',
         templateUrl: function (tElement, tAttrs) {
           var theme = tAttrs.theme || uiSelectConfig.theme;
           return theme + (angular.isDefined(tAttrs.multiple) ? '/select-multiple.tpl.html' : '/select.tpl.html');
         },
-        replace    : true,
-        transclude : true,
-        require    : ['uiSelect', '^ngModel'],
-        scope      : true,
+        replace: true,
+        transclude: true,
+        require: ['uiSelect', '^ngModel'],
+        scope: true,
 
-        controller  : 'uiSelectCtrl',
+        controller: 'uiSelectCtrl',
         controllerAs: '$select',
-        compile     : function (tElement, tAttrs) {
+        compile: function (tElement, tAttrs) {
 
           // Allow setting ngClass on uiSelect
           var match = /{(.*)}\s*{(.*)}/.exec(tAttrs.ngClass);
           if (match) {
-            var combined   = '{' + match[1] + ', ' + match[2] + '}';
+            var combined = '{' + match[1] + ', ' + match[2] + '}';
             tAttrs.ngClass = combined;
             tElement.attr('ng-class', combined);
           }
@@ -39,10 +39,10 @@ uis.directive('uiSelect',
             var $select = ctrls[0];
             var ngModel = ctrls[1];
 
-            $select.generatedId   = uiSelectConfig.generateId();
-            $select.baseTitle     = attrs.title || 'Select box';
+            $select.generatedId = uiSelectConfig.generateId();
+            $select.baseTitle = attrs.title || 'Select box';
             $select.focusserTitle = $select.baseTitle + ' focus';
-            $select.focusserId    = 'focusser-' + $select.generatedId;
+            $select.focusserId = 'focusser-' + $select.generatedId;
 
             $select.closeOnSelect = function () {
               if (angular.isDefined(attrs.closeOnSelect)) {
@@ -58,7 +58,7 @@ uis.directive('uiSelect',
              });
              */
             if (angular.isDefined(attrs.skipFocusser)) {
-              var skipFocusser     = scope.$eval(attrs.skipFocusser);
+              var skipFocusser = scope.$eval(attrs.skipFocusser);
               $select.skipFocusser = skipFocusser !== undefined ? skipFocusser : uiSelectConfig.skipFocusser;
             }
 
@@ -76,13 +76,6 @@ uis.directive('uiSelect',
             };
 
             /*
-             if (attrs.tabindex) {
-             attrs.$observe('tabindex', function (value) {
-             $select.focusInput.attr('tabindex', value);
-             element.removeAttr('tabindex');
-             });
-             }
-
              scope.$watch('searchEnabled', function () {
              var searchEnabled     = scope.$eval(attrs.searchEnabled);
              $select.searchEnabled = searchEnabled !== undefined ? searchEnabled : uiSelectConfig.searchEnabled;
@@ -91,11 +84,6 @@ uis.directive('uiSelect',
              scope.$watch('sortable', function () {
              var sortable     = scope.$eval(attrs.sortable);
              $select.sortable = sortable !== undefined ? sortable : uiSelectConfig.sortable;
-             });
-
-             attrs.$observe('disabled', function () {
-             // No need to use $eval() (thanks to ng-disabled) since we already get a boolean instead of a string
-             $select.disabled = attrs.disabled !== undefined ? attrs.disabled : false;
              });
 
              attrs.$observe('resetSearchInput', function () {
@@ -139,29 +127,31 @@ uis.directive('uiSelect',
              }
              });
              */
-            if (angular.isDefined(attrs.tabindex)) {
-              $select.focusInput.attr('tabindex', scope.$eval(attrs.tabindex));
-              element.removeAttr('tabindex');
+            if (attrs.tabindex) {
+              attrs.$observe('tabindex', function (value) {
+                $select.focusInput.attr('tabindex', value);
+                element.removeAttr('tabindex');
+              });
             }
 
             if (angular.isDefined(attrs.searchEnabled)) {
-              var searchEnabled     = scope.$eval(attrs.searchEnabled);
+              var searchEnabled = scope.$eval(attrs.searchEnabled);
               $select.searchEnabled = searchEnabled !== undefined ? searchEnabled : uiSelectConfig.searchEnabled;
             }
 
             if (angular.isDefined(attrs.sortable)) {
-              var sortable     = scope.$eval(attrs.sortable);
+              var sortable = scope.$eval(attrs.sortable);
               $select.sortable = sortable !== undefined ? sortable : uiSelectConfig.sortable;
             }
 
-            if (angular.isDefined(attrs.disabled)) {
+            attrs.$observe('disabled', function () {
               // No need to use $eval() (thanks to ng-disabled) since we already get a boolean instead of a string
               $select.disabled = attrs.disabled !== undefined ? attrs.disabled : false;
-            }
+            });
 
             if (angular.isDefined(attrs.resetSearchInput)) {
               // $eval() is needed otherwise we get a string instead of a boolean
-              var resetSearchInput     = scope.$eval(attrs.resetSearchInput);
+              var resetSearchInput = scope.$eval(attrs.resetSearchInput);
               $select.resetSearchInput = resetSearchInput !== undefined ? resetSearchInput : true;
             }
 
@@ -195,7 +185,7 @@ uis.directive('uiSelect',
 
             if (angular.isDefined(attrs.taggingTokens)) {
               if (attrs.tagging !== undefined) {
-                var tokens            = attrs.taggingTokens !== undefined ? attrs.taggingTokens.split('|') : [',', 'ENTER'];
+                var tokens = attrs.taggingTokens !== undefined ? attrs.taggingTokens.split('|') : [',', 'ENTER'];
                 $select.taggingTokens = {isActivated: true, tokens: tokens};
               }
             }
@@ -234,8 +224,8 @@ uis.directive('uiSelect',
                 if (!$select.skipFocusser) {
                   //Will lose focus only with certain targets
                   var focusableControls = ['input', 'button', 'textarea', 'select'];
-                  var targetController  = angular.element(e.target).controller('uiSelect'); //To check if target is other ui-select
-                  skipFocusser          = targetController && targetController !== $select; //To check if target is other ui-select
+                  var targetController = angular.element(e.target).controller('uiSelect'); //To check if target is other ui-select
+                  skipFocusser = targetController && targetController !== $select; //To check if target is other ui-select
                   if (!skipFocusser) skipFocusser = ~focusableControls.indexOf(e.target.tagName.toLowerCase()); //Check if target is input, button or textarea
                 } else {
                   skipFocusser = true;
@@ -277,12 +267,22 @@ uis.directive('uiSelect',
                 throw uiSelectMinErr('transcluded', "Expected 1 .ui-select-choices but got '{0}'.", transcludedChoices.length);
               }
               element.querySelectorAll('.ui-select-choices').replaceWith(transcludedChoices);
+
+              var transcludedNoChoice = transcluded.querySelectorAll('.ui-select-no-choice');
+              transcludedNoChoice.removeAttr('ui-select-no-choice'); //To avoid loop in case directive as attr
+              transcludedNoChoice.removeAttr('data-ui-select-no-choice'); // Properly handle HTML5 data-attributes
+              if (transcludedNoChoice.length == 1) {
+                element.querySelectorAll('.ui-select-no-choice').replaceWith(transcludedNoChoice);
+              }
             });
 
             // Support for appending the select field to the body when its open
             var appendToBody = scope.$eval(attrs.appendToBody);
             if (appendToBody !== undefined ? appendToBody : uiSelectConfig.appendToBody) {
               scope.$watch('$select.open', function (isOpen) {
+                if ($select.dropdownPosition === 'auto' || $select.dropdownPosition === 'up') {
+                  scope.calculateDropdownPos();
+                }
                 if (isOpen) {
                   positionDropdown();
                 } else {
@@ -298,16 +298,16 @@ uis.directive('uiSelect',
             }
 
             // Hold on to a reference to the .ui-select-container element for appendToBody support
-            var placeholder   = null,
-                originalWidth = '';
+            var placeholder = null,
+              originalWidth = '';
 
             function positionDropdown() {
               // Remember the absolute position of the element
               var offset = uisOffset(element);
 
               // Clone the element into a placeholder element to take its original place in the DOM
-              placeholder                 = angular.element('<div class="ui-select-placeholder"></div>');
-              placeholder[0].style.width  = offset.width + 'px';
+              placeholder = angular.element('<div class="ui-select-placeholder"></div>');
+              placeholder[0].style.width = offset.width + 'px';
               placeholder[0].style.height = offset.height + 'px';
               element.after(placeholder);
 
@@ -319,9 +319,9 @@ uis.directive('uiSelect',
               $document.find('body').append(element);
 
               element[0].style.position = 'absolute';
-              element[0].style.left     = offset.left + 'px';
-              element[0].style.top      = offset.top + 'px';
-              element[0].style.width    = offset.width + 'px';
+              element[0].style.left = offset.left + 'px';
+              element[0].style.top = offset.top + 'px';
+              element[0].style.width = offset.width + 'px';
             }
 
             function resetDropdown() {
@@ -335,34 +335,25 @@ uis.directive('uiSelect',
               placeholder = null;
 
               element[0].style.position = '';
-              element[0].style.left     = '';
-              element[0].style.top      = '';
-              element[0].style.width    = originalWidth;
+              element[0].style.left = '';
+              element[0].style.top = '';
+              element[0].style.width = originalWidth;
 
               // Set focus back on to the moved element
               $select.setFocus();
             }
 
             // Hold on to a reference to the .ui-select-dropdown element for direction support.
-            var dropdown             = null,
-                directionUpClassName = 'direction-up';
-
-            // Support changing the direction of the dropdown if there isn't enough space to render it.
-            scope.$watch('$select.open', function () {
-
-              if ($select.dropdownPosition === 'auto' || $select.dropdownPosition === 'up') {
-                scope.calculateDropdownPos();
-              }
-
-            });
+            var dropdown = null,
+              directionUpClassName = 'direction-up';
 
             var setDropdownPosUp = function (offset, offsetDropdown) {
 
-              offset         = offset || uisOffset(element);
+              offset = offset || uisOffset(element);
               offsetDropdown = offsetDropdown || uisOffset(dropdown);
 
               dropdown[0].style.position = 'absolute';
-              dropdown[0].style.top      = (offsetDropdown.height * -1) + 'px';
+              dropdown[0].style.top = (offsetDropdown.height * -1) + 'px';
               element.addClass(directionUpClassName);
 
             };
@@ -371,11 +362,11 @@ uis.directive('uiSelect',
 
               element.removeClass(directionUpClassName);
 
-              offset         = offset || uisOffset(element);
+              offset = offset || uisOffset(element);
               offsetDropdown = offsetDropdown || uisOffset(dropdown);
 
               dropdown[0].style.position = '';
-              dropdown[0].style.top      = '';
+              dropdown[0].style.top = '';
 
             };
 
@@ -401,7 +392,7 @@ uis.directive('uiSelect',
 
                     element.removeClass(directionUpClassName);
 
-                    var offset         = uisOffset(element);
+                    var offset = uisOffset(element);
                     var offsetDropdown = uisOffset(dropdown);
 
                     //https://code.google.com/p/chromium/issues/detail?id=342307#c4
@@ -428,7 +419,7 @@ uis.directive('uiSelect',
 
                 // Reset the position of the dropdown.
                 dropdown[0].style.position = '';
-                dropdown[0].style.top      = '';
+                dropdown[0].style.top = '';
                 element.removeClass(directionUpClassName);
               }
             };

@@ -2,7 +2,7 @@
 uis.directive('uiSelectSort', ['$timeout', 'uiSelectConfig', 'uiSelectMinErr', function ($timeout, uiSelectConfig, uiSelectMinErr) {
   return {
     require: '^^uiSelect',
-    link   : function (scope, element, attrs, $select) {
+    link: function (scope, element, attrs, $select) {
 
       if (scope[attrs.uiSelectSort] === null) {
         throw uiSelectMinErr('sort', "Expected a list to sort");
@@ -13,11 +13,11 @@ uis.directive('uiSelectSort', ['$timeout', 'uiSelectConfig', 'uiSelectMinErr', f
         },
         scope.$eval(attrs.uiSelectSortOptions));
 
-      var axis                    = options.axis,
-          draggingClassName       = 'dragging',
-          droppingClassName       = 'dropping',
-          droppingBeforeClassName = 'dropping-before',
-          droppingAfterClassName  = 'dropping-after';
+      var axis = options.axis;
+      var draggingClassName = 'dragging';
+      var droppingClassName = 'dropping';
+      var droppingBeforeClassName = 'dropping-before';
+      var droppingAfterClassName = 'dropping-after';
 
       if ($select.sortable) {
         element.attr('draggable', true);
@@ -25,9 +25,10 @@ uis.directive('uiSelectSort', ['$timeout', 'uiSelectConfig', 'uiSelectMinErr', f
         element.removeAttr('draggable');
       }
 
-      element.on('dragstart', function (e) {
+      element.on('dragstart', function (event) {
         element.addClass(draggingClassName);
-        (e.dataTransfer || e.originalEvent.dataTransfer).setData('text/plain', scope.$index);
+
+        (event.dataTransfer || event.originalEvent.dataTransfer).setData('text', scope.$index.toString());
       });
 
       element.on('dragend', function () {
@@ -46,14 +47,12 @@ uis.directive('uiSelectSort', ['$timeout', 'uiSelectConfig', 'uiSelectMinErr', f
           return;
         }
 
-        var theList = scope.$eval(attrs.uiSelectSort);
-        var isLast  = (e.currentTarget.nextElementSibling || e.originalEvent.currentTarget.nextElementSibling ) === null;
-
+        //var isLast = (e.currentTarget.nextElementSibling || e.originalEvent.currentTarget.nextElementSibling ) === null;
         var offset = axis === 'vertical' ? e.offsetY || e.layerY || (e.originalEvent ? e.originalEvent.offsetY : 0) : e.offsetX || e.layerX || (e.originalEvent ? e.originalEvent.offsetX : 0);
-        //if (offset < (this[axis === 'vertical' ? 'offsetHeight' : 'offsetWidth'] / 2)) {
-        if (!isLast) {
+        if (offset < (this[axis === 'vertical' ? 'offsetHeight' : 'offsetWidth'] / 2)) {
           element.removeClass(droppingAfterClassName);
           element.addClass(droppingBeforeClassName);
+
         } else {
           element.removeClass(droppingBeforeClassName);
           element.addClass(droppingAfterClassName);
@@ -62,10 +61,10 @@ uis.directive('uiSelectSort', ['$timeout', 'uiSelectConfig', 'uiSelectMinErr', f
 
       var dropTimeout;
 
-      var dropHandler = function (e) {
-        e.preventDefault();
+      var dropHandler = function (event) {
+        event.preventDefault();
 
-        var droppedItemIndex = parseInt((e.dataTransfer || e.originalEvent.dataTransfer).getData('text/plain'), 10);
+        var droppedItemIndex = parseInt((event.dataTransfer || event.originalEvent.dataTransfer).getData('text'), 10);
 
         // prevent event firing multiple times in firefox
         $timeout.cancel(dropTimeout);
@@ -75,9 +74,9 @@ uis.directive('uiSelectSort', ['$timeout', 'uiSelectConfig', 'uiSelectMinErr', f
       };
 
       var _dropHandler = function (droppedItemIndex) {
-        var theList    = scope.$eval(attrs.uiSelectSort),
-            itemToMove = theList[droppedItemIndex],
-            newIndex   = null;
+        var theList = scope.$eval(attrs.uiSelectSort),
+          itemToMove = theList[droppedItemIndex],
+          newIndex = null;
 
         if (element.hasClass(droppingBeforeClassName)) {
           if (droppedItemIndex < scope.$index) {
@@ -98,9 +97,9 @@ uis.directive('uiSelectSort', ['$timeout', 'uiSelectConfig', 'uiSelectMinErr', f
         scope.$apply(function () {
           scope.$emit('uiSelectSort:change', {
             array: theList,
-            item : itemToMove,
-            from : droppedItemIndex,
-            to   : newIndex
+            item: itemToMove,
+            from: droppedItemIndex,
+            to: newIndex
           });
         });
 

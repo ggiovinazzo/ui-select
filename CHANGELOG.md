@@ -1,6 +1,14 @@
-# Changelog
+<a name="0.16.1"></a>
+# [0.16.1](https://github.com/angular-ui/ui-select/compare/v0.16.0...v0.16.1) (2016-03-23)
 
-All notable changes to this project will be documented in this file.
+### Bug Fixes
+
+* **$window:** change input size on window resize ([ce24981](https://github.com/angular-ui/ui-select/commit/ce24981)), closes [#522](https://github.com/angular-ui/ui-select/issues/522)
+* **uiSelectMultipleDirective:** add $isEmpty handler ([fccc29a](https://github.com/angular-ui/ui-select/commit/fccc29a)), closes [#850](https://github.com/angular-ui/ui-select/issues/850)
+* **uiSelectMultipleDirective:** refresh choices upon selection change ([03293ff](https://github.com/angular-ui/ui-select/commit/03293ff)), closes [#1243](https://github.com/angular-ui/ui-select/issues/1243)
+
+<a name="0.16.0"></a>
+## [0.15.0](https://github.com/angular-ui/ui-select/compare/v0.15.0...v0.16.0)
 
 <a name="0.15.0"></a>
 ## [0.15.0](https://github.com/angular-ui/ui-select/compare/v0.14.9...v0.15.0) (2016-03-15)
