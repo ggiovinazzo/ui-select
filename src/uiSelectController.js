@@ -5,8 +5,8 @@
  * put as much logic in the controller (instead of the link functions) as possible so it can be easily tested.
  */
 uis.controller('uiSelectCtrl',
-  ['$scope', '$element', '$timeout', '$filter', 'uisRepeatParser', 'uiSelectMinErr', 'uiSelectConfig', '$parse', '$injector',
-  function($scope, $element, $timeout, $filter, RepeatParser, uiSelectMinErr, uiSelectConfig, $parse, $injector) {
+  ['$scope', '$element', '$timeout', '$filter', '$$uisDebounce', 'uisRepeatParser', 'uiSelectMinErr', 'uiSelectConfig', '$parse', '$injector', '$window',
+  function($scope, $element, $timeout, $filter, $$uisDebounce, RepeatParser, uiSelectMinErr, uiSelectConfig, $parse, $injector, $window) {
 
   var ctrl = this;
 
@@ -123,18 +123,35 @@ uis.controller('uiSelectCtrl',
       }
 
       var container = $element.querySelectorAll('.ui-select-choices-content');
-      if (ctrl.$animate && ctrl.$animate.on && ctrl.$animate.enabled(container[0])) {
-        ctrl.$animate.on('enter', container[0], function (elem, phase) {
-          if (phase === 'close') {
+      var searchInput = $element.querySelectorAll('.ui-select-search');
+      if (ctrl.$animate && ctrl.$animate.enabled(container[0])) {
+        var animateHandler = function(elem, phase) {
+          if (phase === 'start' && ctrl.items.length === 0) {
             // Only focus input after the animation has finished
+            ctrl.$animate.off('removeClass', searchInput[0], animateHandler);
+            $timeout(function () {
+              ctrl.focusSearchInput(initSearchValue);
+            });
+          } else if (phase === 'close') {
+            // Only focus input after the animation has finished
+            ctrl.$animate.off('enter', container[0], animateHandler);
             $timeout(function () {
               ctrl.focusSearchInput(initSearchValue);
             });
           }
-        });
+        };
+
+        if (ctrl.items.length > 0) {
+          ctrl.$animate.on('enter', container[0], animateHandler);
+        } else {
+          ctrl.$animate.on('removeClass', searchInput[0], animateHandler);
+        }
       } else {
         $timeout(function () {
           ctrl.focusSearchInput(initSearchValue);
+          if(!ctrl.tagging.isActivated && ctrl.items.length > 1) {
+            _ensureHighlightVisible();
+          }
         });
       }
     }
@@ -143,9 +160,6 @@ uis.controller('uiSelectCtrl',
   ctrl.focusSearchInput = function (initSearchValue) {
     ctrl.search = initSearchValue || ctrl.search;
     ctrl.searchInput[0].focus();
-    if(!ctrl.tagging.isActivated && ctrl.items.length > 1) {
-     _ensureHighlightVisible();
-    }
   };
 
   ctrl.findGroupByName = function(name) {
@@ -620,5 +634,9 @@ uis.controller('uiSelectCtrl',
   $scope.$on('$destroy', function() {
     ctrl.searchInput.off('keyup keydown tagged blur paste');
   });
+
+  angular.element($window).bind('resize', $$uisDebounce(function() {
+    ctrl.sizeSearchInput();
+  }), 50);
 
 }]);
