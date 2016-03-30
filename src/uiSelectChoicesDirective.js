@@ -3,10 +3,10 @@ uis.directive('uiSelectChoices',
     function (uiSelectConfig, RepeatParser, uiSelectMinErr, $compile, $window) {
 
       return {
-        restrict: 'EA',
-        require: '^uiSelect',
-        replace: true,
-        transclude: true,
+        restrict   : 'EA',
+        require    : '^uiSelect',
+        replace    : true,
+        transclude : true,
         templateUrl: function (tElement) {
           // Needed so the uiSelect can detect the transcluded content
           tElement.addClass('ui-select-choices');
@@ -23,7 +23,7 @@ uis.directive('uiSelectChoices',
           return function link(scope, element, attrs, $select, transcludeFn) {
 
             // var repeat = RepeatParser.parse(attrs.repeat);
-            var groupByExp = attrs.groupBy;
+            var groupByExp     = attrs.groupBy;
             var groupFilterExp = attrs.groupFilter;
 
             $select.onFilterAsyncCallback = attrs.onFilterAsync;
@@ -31,7 +31,7 @@ uis.directive('uiSelectChoices',
             $select.parseRepeatAttr(attrs.repeat, groupByExp, groupFilterExp); //Result ready at $select.parserResult
 
             $select.disableChoiceExpression = attrs.uiDisableChoice;
-            $select.onHighlightCallback = attrs.onHighlight;
+            $select.onHighlightCallback     = attrs.onHighlight;
 
             $select.dropdownPosition = attrs.position ? attrs.position.toLowerCase() : uiSelectConfig.dropdownPosition;
 
@@ -63,7 +63,7 @@ uis.directive('uiSelectChoices',
 
             $compile(element, transcludeFn)(scope); //Passing current transcludeFn to be able to append elements correctly from uisTranscludeAppend
 
-            scope.$watch('$select.search', function (newValue) {
+            scope.$watch('$select.search', function uiSelectChoicesSearchWatch(newValue) {
               if (newValue && !$select.open && $select.multiple) $select.activate(false, true);
               $select.activeIndex = $select.tagging.isActivated ? -1 : 0;
               if (!attrs.minimumInputLength || $select.search.length >= attrs.minimumInputLength) {
@@ -75,7 +75,7 @@ uis.directive('uiSelectChoices',
 
             attrs.$observe('refreshDelay', function () {
               // $eval() is needed otherwise we get a string instead of a number
-              var refreshDelay = scope.$eval(attrs.refreshDelay);
+              var refreshDelay     = scope.$eval(attrs.refreshDelay);
               $select.refreshDelay = refreshDelay !== undefined ? refreshDelay : uiSelectConfig.refreshDelay;
             });
           };
