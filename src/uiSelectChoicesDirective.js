@@ -26,6 +26,8 @@ uis.directive('uiSelectChoices',
             var groupByExp = attrs.groupBy;
             var groupFilterExp = attrs.groupFilter;
 
+            $select.onFilterAsyncCallback = attrs.onFilterAsync;
+
             $select.parseRepeatAttr(attrs.repeat, groupByExp, groupFilterExp); //Result ready at $select.parserResult
 
             $select.disableChoiceExpression = attrs.uiDisableChoice;
