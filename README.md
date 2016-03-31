@@ -4,6 +4,8 @@
 
 AngularJS-native version of [Select2](http://ivaynberg.github.io/select2/) and [Selectize](http://brianreavis.github.io/selectize.js/).
 
+[Getting Started](https://github.com/angular-ui/ui-select/wiki/Getting-Started)  `bower install angular-ui-select`
+
 - [Demo](http://plnkr.co/edit/a3KlK8dKH3wwiiksDSn2?p=preview)
 - [Demo Multiselect](http://plnkr.co/edit/juqoNOt1z1Gb349XabQ2?p=preview)
 - [Examples](https://github.com/angular-ui/ui-select/blob/master/examples)
@@ -46,7 +48,7 @@ Make sure composer is install globally before we proceed. After that we need to 
 ### Prepare your environment
 * Install [Node.js](http://nodejs.org/) and NPM (should come with)
 * Install global dev dependencies: `npm install -g bower gulp`
-* Install local dev dependencies: `npm install && bower install` in repository directory
+* Install local dev dependencies: `npm install` in repository directory
 
 ### Development Commands
 
