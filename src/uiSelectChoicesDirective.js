@@ -61,7 +61,7 @@ uis.directive('uiSelectChoices',
                 .attr('ng-click', '$select.select(' + $select.parserResult.itemName + ',$select.skipFocusser,$event)');
             }
 
-            //element.attr('ng-if', '$select.open');
+            element.attr('ng-if', '$select.open');
 
             $compile(element, transcludeFn)(scope); //Passing current transcludeFn to be able to append elements correctly from uisTranscludeAppend
 
@@ -75,11 +75,15 @@ uis.directive('uiSelectChoices',
               }
             });
 
-            attrs.$observe('refreshDelay', function () {
-              // $eval() is needed otherwise we get a string instead of a number
+            /*attrs.$observe('refreshDelay', function () {
+             // $eval() is needed otherwise we get a string instead of a number
+             var refreshDelay = scope.$eval(attrs.refreshDelay);
+             $select.refreshDelay = refreshDelay !== undefined ? refreshDelay : uiSelectConfig.refreshDelay;
+             });*/
+            if (angular.isDefined(attrs.refreshDelay)) {
               var refreshDelay = scope.$eval(attrs.refreshDelay);
               $select.refreshDelay = refreshDelay !== undefined ? refreshDelay : uiSelectConfig.refreshDelay;
-            });
+            }
           };
         }
       };
