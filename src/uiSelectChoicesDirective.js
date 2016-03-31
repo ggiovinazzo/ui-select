@@ -26,8 +26,6 @@ uis.directive('uiSelectChoices',
             var groupByExp = attrs.groupBy;
             var groupFilterExp = attrs.groupFilter;
 
-            $select.onFilterAsyncCallback = attrs.onFilterAsync;
-
             $select.parseRepeatAttr(attrs.repeat, groupByExp, groupFilterExp); //Result ready at $select.parserResult
 
             $select.disableChoiceExpression = attrs.uiDisableChoice;
@@ -38,7 +36,7 @@ uis.directive('uiSelectChoices',
             if (groupByExp) {
               var groups = element.querySelectorAll('.ui-select-choices-group');
               if (groups.length !== 1) throw uiSelectMinErr('rows', "Expected 1 .ui-select-choices-group but got '{0}'.", groups.length);
-              groups.attr('ng-repeat', RepeatParser.getGroupNgRepeatExpression()).attr('bindonce', '');
+              groups.attr('ng-repeat', RepeatParser.getGroupNgRepeatExpression());
             }
 
             var choices = element.querySelectorAll('.ui-select-choices-row');
@@ -46,7 +44,7 @@ uis.directive('uiSelectChoices',
               throw uiSelectMinErr('rows', "Expected 1 .ui-select-choices-row but got '{0}'.", choices.length);
             }
 
-            choices.attr('ng-repeat', $select.parserResult.repeatExpression(groupByExp)).attr('bindonce', '')
+            choices.attr('ng-repeat', $select.parserResult.repeatExpression(groupByExp))
               .attr('ng-if', '$select.open'); //Prevent unnecessary watches when dropdown is closed
             if ($window.document.addEventListener) {  //crude way to exclude IE8, specifically, which also cannot capture events
               choices.attr('ng-mouseenter', '$select.setActiveItem(' + $select.parserResult.itemName + ')')
@@ -60,6 +58,8 @@ uis.directive('uiSelectChoices',
               rowsInner.attr('ng-mouseenter', '$select.setActiveItem(' + $select.parserResult.itemName + ')')
                 .attr('ng-click', '$select.select(' + $select.parserResult.itemName + ',$select.skipFocusser,$event)');
             }
+
+            //element.attr('ng-if', '$select.open');
 
             $compile(element, transcludeFn)(scope); //Passing current transcludeFn to be able to append elements correctly from uisTranscludeAppend
 

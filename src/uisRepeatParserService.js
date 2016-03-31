@@ -8,7 +8,7 @@
  * https://github.com/angular-ui/ui-select/commit/5dd63ad#commitcomment-5504697
  */
 
-uis.service('uisRepeatParser', ['uiSelectMinErr','$parse', function(uiSelectMinErr, $parse) {
+uis.service('uisRepeatParser', ['uiSelectMinErr', '$parse', function (uiSelectMinErr, $parse) {
   var self = this;
 
   /**
@@ -18,7 +18,7 @@ uis.service('uisRepeatParser', ['uiSelectMinErr','$parse', function(uiSelectMinE
    * source = "addresses | filter: {street: $select.search}",
    * trackByExp = "$index",
    */
-  self.parse = function(expression) {
+  self.parse = function (expression) {
 
 
     var match;
@@ -38,24 +38,24 @@ uis.service('uisRepeatParser', ['uiSelectMinErr','$parse', function(uiSelectMinE
 
     if (!match) {
       throw uiSelectMinErr('iexp', "Expected expression in form of '_item_ in _collection_[ track by _id_]' but got '{0}'.",
-              expression);
+        expression);
     }
-    
-    var source = match[5], 
-        filters = '';
+
+    var source = match[5],
+      filters = '';
 
     // When using (key,value) ui-select requires filters to be extracted, since the object
-    // is converted to an array for $select.items 
+    // is converted to an array for $select.items
     // (in which case the filters need to be reapplied)
     if (match[3]) {
       // Remove any enclosing parenthesis
       source = match[5].replace(/(^\()|(\)$)/g, '');
       // match all after | but not after ||
       var filterMatch = match[5].match(/^\s*(?:[\s\S]+?)(?:[^\|]|\|\|)+([\s\S]*)\s*$/);
-      if(filterMatch && filterMatch[1].trim()) {
+      if (filterMatch && filterMatch[1].trim()) {
         filters = filterMatch[1];
         source = source.replace(filters, '');
-      }      
+      }
     }
 
     return {
@@ -71,12 +71,12 @@ uis.service('uisRepeatParser', ['uiSelectMinErr','$parse', function(uiSelectMinE
           expression += ' track by ' + this.trackByExp;
         }
         return expression;
-      } 
+      }
     };
 
   };
 
-  self.getGroupNgRepeatExpression = function() {
+  self.getGroupNgRepeatExpression = function () {
     return '$group in $select.groups';
   };
 
