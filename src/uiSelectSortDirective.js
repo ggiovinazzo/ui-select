@@ -28,7 +28,9 @@ uis.directive('uiSelectSort', ['$timeout', 'uiSelectConfig', 'uiSelectMinErr', f
       element.on('dragstart', function (event) {
         element.addClass(draggingClassName);
 
-        (event.dataTransfer || event.originalEvent.dataTransfer).setData('text', scope.$index.toString());
+        var dt = (event.dataTransfer || event.originalEvent.dataTransfer);
+        dt.setData('text', scope.$index.toString());
+        dt.effectAllowed = 'move';
       });
 
       element.on('dragend', function () {
